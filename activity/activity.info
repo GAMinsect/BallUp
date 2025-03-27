@@ -1,0 +1,8 @@
+[Activity]
+name = BallUP
+activity_version = 1
+bundle_id = org.sugarlabs.BallUP
+exec = sugar-activity3 activity.BallUpActivity
+icon = activity-helloworld
+licence = GPLv3+
+repository = https://github.com/GAMinsect/Up.git
