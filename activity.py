@@ -13,6 +13,7 @@ from gi.repository import Gtk
 from sugargame import canvas
 from game import BallGame
 
+import pygame
 
 class BallGameActivity(activity.Activity):
     def __init__(self, handle):
@@ -38,6 +39,9 @@ class BallGameActivity(activity.Activity):
         
         # Add the canvas to the activity's GTK grid
         self.set_canvas(self._pygamecanvas)
+        
+        # Connect to the destroy signal for proper cleanup
+        self.connect("destroy", self._cleanup_cb)
         
         # Show everything
         self.show_all()
@@ -97,3 +101,15 @@ class BallGameActivity(activity.Activity):
         )
         help_dialog.run()
         help_dialog.destroy()
+    
+    def _cleanup_cb(self, widget):
+        """Clean up pygame resources before closing"""
+        self.game.cleanup()  # Call the cleanup method in our game
+        
+    def read_file(self, file_path):
+        """Load the activity state"""
+        pass
+        
+    def write_file(self, file_path):
+        """Save the activity state"""
+        pass
