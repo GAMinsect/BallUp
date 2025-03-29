@@ -24,6 +24,9 @@ class BallGame:
         # Setup game state
         self.running = True
         self.canvas = None  # Will be set by Sugar
+        
+        # Add a flag to track if the space key is being pressed
+        self.space_pressed = False
     
     def set_canvas(self, canvas):
         """Store a reference to the pygame canvas"""
@@ -47,8 +50,17 @@ class BallGame:
             # Check for key press
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
-                    # Move ball upward
-                    self.ball_y = max(self.BALL_RADIUS, self.ball_y - self.JUMP_AMOUNT)  # Ensure ball doesn't go off screen
+                    self.space_pressed = True
+            elif event.type == pygame.KEYUP:
+                if event.key == pygame.K_SPACE:
+                    self.space_pressed = False
+        
+        # Check key states (this is an alternative method that might work better in Sugar)
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_SPACE] or self.space_pressed:
+            # Move ball upward
+            self.ball_y = max(self.BALL_RADIUS, self.ball_y - self.JUMP_AMOUNT)
+            self.space_pressed = False  # Reset after moving to prevent continuous movement
         
         # Clear screen
         screen.fill(self.BG_COLOR)
