@@ -25,7 +25,7 @@ class BallGameActivity(activity.Activity):
         # Build the activity toolbar
         self.build_toolbar()
         
-        # Build the Pygame canvas and keep a reference to it
+        # Build the Pygame canvas
         self._pygamecanvas = canvas.PygameCanvas(self,
             main=self.game.run,
             modules=[pygame.display, pygame.font])
@@ -34,8 +34,8 @@ class BallGameActivity(activity.Activity):
         self._pygamecanvas.set_can_focus(True)
         self._pygamecanvas.grab_focus()
         
-        # Set the game's screen reference
-        self.game.set_screen(self._pygamecanvas.get_surface())
+        # Tell the game about the canvas
+        self.game.set_canvas(self._pygamecanvas)
         
         # Add the canvas to the activity's GTK grid
         self.set_canvas(self._pygamecanvas)
