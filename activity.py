@@ -8,7 +8,7 @@ from sugar3.graphics.style import GRID_CELL_SIZE
 from gettext import gettext as _
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk
+from gi.repository import Gtk, Gdk
 
 from sugargame import canvas
 from game import BallGame
@@ -43,6 +43,9 @@ class BallGameActivity(activity.Activity):
         # Connect to the destroy signal for proper cleanup
         self.connect("destroy", self._cleanup_cb)
         
+        # Connect key press event for alternative handling
+        self.connect("key-press-event", self._key_press_cb)
+        
         # Show everything
         self.show_all()
     
@@ -63,6 +66,13 @@ class BallGameActivity(activity.Activity):
         restart_button.connect('clicked', self._restart_button_cb)
         toolbar_box.toolbar.insert(restart_button, -1)
         restart_button.show()
+        
+        # Add a jump button
+        jump_button = ToolButton('go-up')
+        jump_button.set_tooltip(_('Jump'))
+        jump_button.connect('clicked', self._jump_button_cb)
+        toolbar_box.toolbar.insert(jump_button, -1)
+        jump_button.show()
         
         # Add a help button
         help_button = ToolButton('help-icon')
@@ -87,6 +97,19 @@ class BallGameActivity(activity.Activity):
         # Reset ball position
         self.game.ball_y = self.game.HEIGHT - self.game.BALL_RADIUS
     
+    def _jump_button_cb(self, button):
+        """Make the ball jump when button is clicked"""
+        # Simulate a space press in the game
+        self.game.space_pressed = True
+    
+    def _key_press_cb(self, widget, event):
+        """Handle key press events at the activity level"""
+        # Check if space key was pressed
+        if event.keyval == Gdk.KEY_space:
+            self.game.space_pressed = True
+            return True
+        return False
+    
     def _help_button_cb(self, button):
         """Display a help dialog"""
         help_dialog = Gtk.MessageDialog(
@@ -97,7 +120,7 @@ class BallGameActivity(activity.Activity):
             text=_('Ball Game Help')
         )
         help_dialog.format_secondary_text(
-            _('Press the space bar to make the ball jump up!')
+            _('Press the space bar or the Jump button to make the ball jump up!')
         )
         help_dialog.run()
         help_dialog.destroy()
