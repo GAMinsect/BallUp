@@ -23,18 +23,22 @@ class BallGame:
         
         # Setup game state
         self.running = True
-        self.screen = None  # Will be set by Sugar
+        self.canvas = None  # Will be set by Sugar
     
-    def set_screen(self, screen):
-        """Set the screen surface (called by the activity)"""
-        self.screen = screen
+    def set_canvas(self, canvas):
+        """Store a reference to the pygame canvas"""
+        self.canvas = canvas
+        # The screen will be automatically set up by sugargame
     
-    def draw_ball(self, x, y):
+    def draw_ball(self, x, y, screen):
         """Draw the ball at the specified position"""
-        pygame.draw.circle(self.screen, self.BALL_COLOR, (x, y), self.BALL_RADIUS)
+        pygame.draw.circle(screen, self.BALL_COLOR, (x, y), self.BALL_RADIUS)
     
     def run(self):
         """Main game loop - will be called by sugargame"""
+        # Get the pygame screen - in some sugargame versions, this is done automatically
+        screen = pygame.display.get_surface()
+        
         # Process events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -47,10 +51,10 @@ class BallGame:
                     self.ball_y = max(self.BALL_RADIUS, self.ball_y - self.JUMP_AMOUNT)  # Ensure ball doesn't go off screen
         
         # Clear screen
-        self.screen.fill(self.BG_COLOR)
+        screen.fill(self.BG_COLOR)
         
         # Draw ball
-        self.draw_ball(self.ball_x, self.ball_y)
+        self.draw_ball(self.ball_x, self.ball_y, screen)
         
         # Update display
         pygame.display.flip()
@@ -63,5 +67,8 @@ class BallGame:
     def cleanup(self):
         """Clean up pygame resources properly"""
         # Release all pygame resources properly
-        pygame.display.quit()
-        pygame.quit()
+        try:
+            pygame.display.quit()
+            pygame.quit()
+        except:
+            pass  # Ignore errors during cleanup
