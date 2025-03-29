@@ -1,8 +1,0 @@
-[Activity]
-name = BallGame
-bundle_id = org.sugarlabs.BallGame
-exec = sugar-activity3 activity.BallGameActivity
-icon = activity-ballgame
-activity_version = 1
-license = GPLv3+
-repository = https://github.com/GAMinsect/BallUp
