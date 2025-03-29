@@ -5,7 +5,6 @@ from sugar3.activity import activity
 from sugar3.graphics.toolbarbox import ToolbarBox
 from sugar3.activity.widgets import StopButton, ActivityToolbarButton
 import sugargame.canvas
-import sugargame.event
 from ball_up_game import BallUpGame
 
 class BallUpActivity(activity.Activity):
@@ -31,15 +30,12 @@ class BallUpActivity(activity.Activity):
         self.set_toolbar_box(toolbar_box)
         toolbar_box.show()
 
-        # Create the Pygame canvas
-        self._pygamecanvas = sugargame.canvas.PygameCanvas(self)
+        # Create the Pygame canvas with the main loop
+        self._pygamecanvas = sugargame.canvas.PygameCanvas(self, main=self.game.run)
         self.set_canvas(self._pygamecanvas)
 
-        # Create an instance of the game
-        self.game = BallUpGame()
-
-        # Start the Pygame main loop
-        self._pygamecanvas.run_pygame(self.game.run)
+        # Optionally, assign keyboard focus to the PygameCanvas
+        self._pygamecanvas.grab_focus()
 
     def read_file(self, file_path):
         pass  # Implement loading functionality if needed
