@@ -10,35 +10,31 @@ from ball_up_game import BallUpGame
 class BallUpActivity(activity.Activity):
     def __init__(self, handle):
         super(BallUpActivity, self).__init__(handle)
-
+        # Initialize the game instance
+        self.game = BallUpGame()
         # Set up the toolbar
         toolbar_box = ToolbarBox()
         activity_button = ActivityToolbarButton(self)
         toolbar_box.toolbar.insert(activity_button, 0)
         activity_button.show()
-
         separator = Gtk.SeparatorToolItem()
         separator.props.draw = False
         separator.set_expand(True)
         toolbar_box.toolbar.insert(separator, -1)
         separator.show()
-
         stop_button = StopButton(self)
         toolbar_box.toolbar.insert(stop_button, -1)
         stop_button.show()
-
         self.set_toolbar_box(toolbar_box)
         toolbar_box.show()
-
         # Create the Pygame canvas with the main loop
         self._pygamecanvas = sugargame.canvas.PygameCanvas(self, main=self.game.run)
         self.set_canvas(self._pygamecanvas)
-
         # Optionally, assign keyboard focus to the PygameCanvas
         self._pygamecanvas.grab_focus()
 
     def read_file(self, file_path):
-        pass  # Implement loading functionality if needed
+        self.game.read_file(file_path)
 
     def write_file(self, file_path):
-        pass  # Implement saving functionality if needed
+        self.game.write_file(file_path)
